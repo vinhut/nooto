@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="tinymce/js/tinymce/tinymce.min.js"></script>
+    <script>
+            function updateContent(data){
+                tinymce.get('mytextarea').setContent(atob(data));
+            }
+
+            function getContent(){
+                return btoa(tinyMCE.get('mytextarea').getContent());
+            }
+
+            function setFullScreen(){
+                console.log("set editor to FullScreen");
+                tinyMCE.get('mytextarea').execCommand('mceFullScreen');
+            }
+    </script>
+</head>
+<body>
+<form>
+            <!-- <textarea name="editor1" id="editor1" rows="10" cols="80"> -->
+            <textarea id="mytextarea" style="width:100%">
+                Select Note Title On TreeView
+            </textarea>
+    <script>
+         tinymce.init({
+            selector: "#mytextarea",
+            skin : "custom",
+            plugins: [
+                "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                "searchreplace wordcount visualblocks visualchars code fullscreen",
+                "insertdatetime media nonbreaking save table contextmenu directionality",
+                "emoticons template paste textcolor colorpicker textpattern imagetools autoresize bdesk_photo"
+            ],
+            toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media",
+            toolbar2: "forecolor backcolor emoticons bdesk_photo | fontselect | fontsizeselect",
+            image_advtab: true,
+            autoresize_on_init: true,
+            force_br_newlines : true,
+            force_p_newlines : false,
+            forced_root_block : false,
+            extended_valid_elements:'script[language|type|src]',
+            init_instance_callback : function(editor) {
+                console.log("Editor: " + editor.id + " is now initialized.");
+                //editor.execCommand('mceFullScreen');
+                window.setTimeout(setFullScreen,1500);
+            }
+        });
+    </script>
+</form>
+</body>
+</html>

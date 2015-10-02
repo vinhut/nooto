@@ -1,0 +1,8 @@
+- autolock app
+- sync to/from server
+- add uuid+epoch time in db
+- change parent value to uuid
+
+Done :
+- tinymce insert image plugin, insert image from localfile as base64
+- notes parent + child
