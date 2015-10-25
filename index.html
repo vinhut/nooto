@@ -2,12 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <link href="css/shCore.css" rel="stylesheet" type="text/css" />
-    <link href="css/shThemeDefault.css" rel="stylesheet" type="text/css" />
     <script src="tinymce/js/tinymce/tinymce.min.js"></script>
-    <script type="text/javascript" src="js/shCore.js"></script>
-    <script type="text/javascript" src="js/shBrushJScript.js"></script>
-    <script type="text/javascript" src="js/shBrushPython.js"></script>
     <script>
             function updateContent(data){
                 tinymce.get('mytextarea').setContent(atob(data));
@@ -44,12 +39,12 @@
             skin : "custom",
             plugins: [
                 "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-                "searchreplace wordcount visualblocks visualchars code fullscreen code preview sh4tinymce wordcount",
+                "searchreplace wordcount visualblocks visualchars code fullscreen code preview wordcount",
                 "insertdatetime media nonbreaking save table contextmenu directionality",
                 "emoticons template paste textcolor colorpicker textpattern imagetools autoresize bdesk_photo"
             ],
             toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media",
-            toolbar2: "forecolor backcolor emoticons bdesk_photo | fontselect | fontsizeselect | sh4tinymce",
+            toolbar2: "forecolor backcolor emoticons bdesk_photo | fontselect | fontsizeselect",
             image_advtab: true,
             autoresize_on_init: true,
             force_br_newlines : true,

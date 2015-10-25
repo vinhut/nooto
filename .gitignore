@@ -2,3 +2,4 @@ dist/
 GUI_bak.ui
 .idea/
 *.pyc
+nooto.db

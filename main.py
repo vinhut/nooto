@@ -85,12 +85,15 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
         menu = QMenu()
         add_note = QAction("add note",self)
         add_subnote = QAction("add sub note",self)
+        rename_note = QAction("rename note",self)
         delete_note = QAction("delete note",self)
         add_note.triggered.connect(self.addNote)
         add_subnote.triggered.connect(self.addSubNote)
+        rename_note.triggered.connect(self.renameNote)
         delete_note.triggered.connect(self.deleteNote)
         menu.addAction(add_note)
         menu.addAction(add_subnote)
+        menu.addAction(rename_note)
         menu.addAction(delete_note)
         menu.exec_(self.treeWidget.viewport().mapToGlobal(position))
 
@@ -151,6 +154,23 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
             finally:
                 self.conn.commit()
                 self.id2objmap[id] = {'title':str(title),'parent':parent_id,'object':item}
+                self.treeWidget.currentItem().setExpanded(True)
+
+    def renameNote(self):
+        title, ok = QtWidgets.QInputDialog.getText(self, 'Rename Note', 'Rename note to:')
+        if ok:
+            try:
+                # get parent id
+                id = int(str(self.treeWidget.currentItem().text(1)))
+                param = (self.encrypt(content=str(title)), id,)
+                self.curs.execute('UPDATE Note SET title=? where id=?', param)
+                item = self.treeWidget.currentItem()
+                item.setText(0,title)
+            except:
+                print "error renaming note"
+            finally:
+                self.conn.commit()
+                self.id2objmap[id]['title'] = str(title)
                 self.treeWidget.currentItem().setExpanded(True)
 
     def deleteNote(self):
