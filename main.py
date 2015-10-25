@@ -5,7 +5,8 @@ from PyQt5.QtCore import QUrl, QTimer, Qt, QVariant
 from PyQt5 import QtCore
 from PyQt5.QtGui import QFont
 from PyQt5.QtWebKit import QWebSettings
-from PyQt5.QtWidgets import QAction, QTreeWidgetItem, QMenu
+from PyQt5.QtWebKitWidgets import QWebPage
+from PyQt5.QtWidgets import QAction, QTreeWidgetItem, QMenu, QTabBar
 from PyQt5 import QtPrintSupport
 
 import GUI  # This file holds our MainWindow and all design related things
@@ -72,12 +73,13 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
         #url = QUrl('http://www.tinymce.com/tryit/full.php')
         self.webView.setUrl(url)
         #self.webView.page().setContentEditable(True)
+        self.webView.page().mainFrame().addToJavaScriptWindowObject("pyObj", self)
 
         self.treeWidget.itemClicked.connect(self.getTreeItemText)
-        # start autosave interval
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.autoSave)
-        self.timer.start(2000)
+
+    @QtCore.pyqtSlot(str)
+    def message_test(self,content):
+        print "from javascript "+content
 
     def openContextMenu(self, position):
         menu = QMenu()
@@ -99,9 +101,6 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
         else:
             sys.exit(1)
 
-    def autoSave(self):
-        self.saveNote()
-
     def getTreeItemText(self):
         self.id = int(str(self.treeWidget.currentItem().text(1)))
         param = (self.id,)
@@ -109,26 +108,18 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
         row = self.curs.fetchone()
         content = self.decrypt(row['content'])
         self.setHTML(content=content)
-        self.old_content = content
-        # print "content = ",content
-        # encrypted = self.encrypt("pass123",content)
-        # decrypted = self.decrypt("pass123",encrypted)
-        # print base64.b64decode(decrypted)
 
-    def saveNote(self):
-        frame = self.webView.page().mainFrame()
-        content = str(frame.evaluateJavaScript('getContent()'))
-        if self.old_content != None and (content != self.old_content):
-            param = (self.encrypt(content), self.id,)
-            self.curs.execute('UPDATE Note SET content=? where id=?', param)
-            self.conn.commit()
-            self.old_content = content
+    @QtCore.pyqtSlot(str)
+    def saveNote(self,content):
+        print "saving"
+        param = (self.encrypt(content), self.id,)
+        self.curs.execute('UPDATE Note SET content=? where id=?', param)
+        self.conn.commit()
+        print "saved"
 
     def setHTML(self, _=None, content=''):
         frame = self.webView.page().mainFrame()
         web_frame = frame.evaluateJavaScript("updateContent(\"{0}\")".format(content))
-        # print web_frame.toString()
-        # print type(web_frame)
 
     def addNote(self):
         title, ok = QtWidgets.QInputDialog.getText(self, 'New Note', 'Enter new title:')
