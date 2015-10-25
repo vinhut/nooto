@@ -2,7 +2,12 @@
 - sync to/from server
 - add uuid+epoch time in db
 - change parent value to uuid
+- add code blockquote
 
 Done :
 - tinymce insert image plugin, insert image from localfile as base64
 - notes parent + child
+- default font 16px
+- change autosave polling to callback method from javascript
+- fix undo behavior
+- rename note
