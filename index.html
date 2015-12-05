@@ -19,7 +19,7 @@
                 tinyMCE.get('mytextarea').execCommand('mceFullScreen');
             }
 
-            function message_test(){
+            function save_note(){
                 var content = btoa(tinyMCE.get('mytextarea').getContent());
                 //pyObj.message_test(content);
                 pyObj.saveNote(content);
@@ -58,7 +58,7 @@
             },
             setup: function(editor) {
                 editor.on('change', function(e) {
-                    message_test();
+                    save_note();
                 });
             }
         });
