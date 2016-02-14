@@ -5,7 +5,7 @@
     <script src="tinymce/js/tinymce/tinymce.min.js"></script>
     <script>
             function updateContent(data){
-				var decode = decodeURIComponent(escape(atob(data)));
+                var decode = decodeURIComponent(escape(atob(data)));
                 tinymce.get('mytextarea').setContent(decode);
                 //document.getElementById("mytextarea").innerHTML = atob(data);
                 tinyMCE.get('mytextarea').undoManager.clear()
@@ -21,7 +21,7 @@
             }
 
             function save_content(){
-				var content = tinyMCE.get('mytextarea').getContent();
+                var content = tinyMCE.get('mytextarea').getContent();
                 var encoded = btoa(unescape(encodeURIComponent(content)));
                 console.log(encoded);
                 //pyObj.message_test(content);

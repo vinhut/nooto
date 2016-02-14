@@ -24,6 +24,7 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
     id = None
     old_content = ""
 
+
     def __init__(self):
         # Explaining super is out of the scope of this article
         # So please google it if you're not familar with it
@@ -81,6 +82,7 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
     def message_test(self,content):
         print "from javascript "+content
 
+
     def openContextMenu(self, position):
         menu = QMenu()
         add_note = QAction("add note",self)
@@ -97,6 +99,7 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
         menu.addAction(delete_note)
         menu.exec_(self.treeWidget.viewport().mapToGlobal(position))
 
+
     def fillPassword(self):
         passwd, ok = QtWidgets.QInputDialog.getText(self, 'Input Password', 'Enter your password:',echo=QtWidgets.QLineEdit.Password)
         if ok and not (len(passwd) == 0):
@@ -112,6 +115,7 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
         content = self.decrypt(row['content'])
         self.setHTML(content=content)
 
+
     @QtCore.pyqtSlot(str)
     def saveNote(self,content):
         print "saving"
@@ -120,9 +124,11 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
         self.conn.commit()
         print "saved"
 
+
     def setHTML(self, _=None, content=''):
         frame = self.webView.page().mainFrame()
         web_frame = frame.evaluateJavaScript("updateContent(\"{0}\")".format(content))
+
 
     def addNote(self):
         title, ok = QtWidgets.QInputDialog.getText(self, 'New Note', 'Enter new title:')
@@ -135,6 +141,7 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
             id = self.curs.lastrowid
             item.setText(1,str(id))
             self.id2objmap[id] = {'title':str(title),'parent':None,'object':item}
+
 
     def addSubNote(self):
         title, ok = QtWidgets.QInputDialog.getText(self, 'New Note', 'Enter new title:')
@@ -156,6 +163,7 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
                 self.id2objmap[id] = {'title':str(title),'parent':parent_id,'object':item}
                 self.treeWidget.currentItem().setExpanded(True)
 
+
     def renameNote(self):
         title, ok = QtWidgets.QInputDialog.getText(self, 'Rename Note', 'Rename note to:')
         if ok:
@@ -173,6 +181,7 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
                 self.id2objmap[id]['title'] = str(title)
                 self.treeWidget.currentItem().setExpanded(True)
 
+
     def deleteNote(self):
         reply = QtWidgets.QMessageBox.question(self, 'Delete Note',
                                            "Are you sure want to delete?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
@@ -188,6 +197,7 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
             self.conn.commit()
             self.setHTML(content=base64.b64encode("<h1>Content Deleted</h1>"))
 
+
     def deleteChild(self,item):
         if item.childCount() != 0:
             for child in item.takeChildren():
@@ -199,15 +209,17 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
         else:
             return
 
+
     def encrypt(self, content):
         output = cStringIO.StringIO()
-        sf = pyscrypt.ScryptFile(output, self.passwd, 1024, 1, 1)
+        sf = pyscrypt.ScryptFile(output, self.passwd, 16384, 8, 1)
         sf.write(content)
         sf.finalize()
         encrypted = base64.b64encode(output.getvalue())
         # print "enc = ",encrypted
         output.close()
         return encrypted
+
 
     def decrypt(self, content):
         input = cStringIO.StringIO()
