@@ -5,7 +5,8 @@
     <script src="tinymce/js/tinymce/tinymce.min.js"></script>
     <script>
             function updateContent(data){
-                tinymce.get('mytextarea').setContent(atob(data));
+				var decode = decodeURIComponent(escape(atob(data)));
+                tinymce.get('mytextarea').setContent(decode);
                 //document.getElementById("mytextarea").innerHTML = atob(data);
                 tinyMCE.get('mytextarea').undoManager.clear()
             }
@@ -19,10 +20,12 @@
                 tinyMCE.get('mytextarea').execCommand('mceFullScreen');
             }
 
-            function message_test(){
-                var content = btoa(tinyMCE.get('mytextarea').getContent());
+            function save_content(){
+				var content = tinyMCE.get('mytextarea').getContent();
+                var encoded = btoa(unescape(encodeURIComponent(content)));
+                console.log(encoded);
                 //pyObj.message_test(content);
-                pyObj.saveNote(content);
+                pyObj.saveNote(encoded);
             }
 
     </script>
@@ -58,7 +61,8 @@
             },
             setup: function(editor) {
                 editor.on('change', function(e) {
-                    message_test();
+                    console.log("changed");
+                    save_content();
                 });
             }
         });
