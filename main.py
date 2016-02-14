@@ -212,7 +212,7 @@ class UiApp(QtWidgets.QMainWindow, GUI.Ui_MainWindow):
 
     def encrypt(self, content):
         output = cStringIO.StringIO()
-        sf = pyscrypt.ScryptFile(output, self.passwd, 1024, 8, 1)
+        sf = pyscrypt.ScryptFile(output, self.passwd, 16384, 8, 1)
         sf.write(content)
         sf.finalize()
         encrypted = base64.b64encode(output.getvalue())
