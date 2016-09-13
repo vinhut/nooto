@@ -3,7 +3,18 @@
 <head>
     <meta charset="utf-8">
     <script src="tinymce/js/tinymce/tinymce.min.js"></script>
+    <script src="js/pouchdb-5.3.1.min.js"></script>
     <script>
+            pyObj.message_test("start ... from js");
+
+            var db = new PouchDB('Nooto');
+            db.info().then(function (info) {
+                console.log(info);
+                pyObj.message_test("trying to get db info");
+                pyObj.message_test(String(info));
+            })
+
+
             function updateContent(data){
                 var decode = decodeURIComponent(escape(atob(data)));
                 tinymce.get('mytextarea').setContent(decode);
