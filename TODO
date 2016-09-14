@@ -5,9 +5,14 @@
 - add code blockquote
 
 Done :
+- fix japanese input
+- faster scrypt
 - tinymce insert image plugin, insert image from localfile as base64
 - notes parent + child
 - default font 16px
 - change autosave polling to callback method from javascript
 - fix undo behavior
 - rename note
+
+backlog :
+- use couchbase db
